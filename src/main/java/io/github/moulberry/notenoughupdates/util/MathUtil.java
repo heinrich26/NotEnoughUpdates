@@ -29,4 +29,16 @@ public class MathUtil {
 	public static boolean basicallyEqual(double num1, double num2) {
 		return Math.abs(num1 - num2) < 0.01;
 	}
+
+	/**
+	 * Ensures a number is between `min` and `max`.
+	 *
+	 * @param value value to be limited
+	 * @param min minimum value
+	 * @param max maximum value
+	 * @return bounded value
+	 */
+	public static int coerceIn(int value, int min, int max) {
+		return Math.max(min, Math.min(value, max));
+	}
 }

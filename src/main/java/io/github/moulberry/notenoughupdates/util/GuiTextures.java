@@ -27,9 +27,8 @@ public class GuiTextures {
 
 	public static final ResourceLocation itemPaneTabArrow =
 		new ResourceLocation("notenoughupdates:item_pane_tab_arrow.png");
-	public static final ResourceLocation rightarrow_overlay =
-		new ResourceLocation("notenoughupdates:rightarrow_overlay.png");
-	public static final ResourceLocation rightarrow = new ResourceLocation("notenoughupdates:rightarrow.png");
+	public static final ResourceLocation nav_buttons =
+		new ResourceLocation("notenoughupdates:nav_buttons.png");
 	public static final ResourceLocation close = new ResourceLocation("notenoughupdates:close.png");
 	public static final ResourceLocation settings = new ResourceLocation("notenoughupdates:settings.png");
 
@@ -121,5 +120,7 @@ public class GuiTextures {
 		new ResourceLocation("notenoughupdates:core/slider/slider_on_segment.png");
 	public static final ResourceLocation slider_button_new =
 		new ResourceLocation("notenoughupdates:core/slider/slider_button.png");
+
+	public static final ResourceLocation mc_button = new ResourceLocation("minecraft:textures/gui/widgets.png");
 
 }

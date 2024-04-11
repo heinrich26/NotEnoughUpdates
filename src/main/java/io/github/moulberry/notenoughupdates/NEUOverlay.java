@@ -1684,82 +1684,68 @@ public class NEUOverlay extends Gui {
 
 		float maxStrLen = fr.getStringWidth(EnumChatFormatting.BOLD + name + maxPages + "/" + maxPages);
 		float maxButtonXSize = (rightSide - leftSide + 2 - maxStrLen * 0.5f - 10) / 2f;
-		int buttonXSize = (int) Math.min(maxButtonXSize, getSearchBarYSize() * 480 / 160f);
-		int ySize = (int) (buttonXSize / 480f * 160);
-		int yOffset = (int) ((getSearchBarYSize() - ySize) / 2f);
+		int buttonXSize = (int) Math.min(maxButtonXSize, getSearchBarYSize() * 3);
+		int ySize = buttonXSize / 3;
+		int yOffset = (getSearchBarYSize() - ySize) / 2;
 		int top = getBoxPadding() + yOffset;
 
-		int leftPressed = 0;
-		int rightPressed = 0;
+		boolean leftHovered = false;
+		boolean rightHovered = false;
 
-		if (Mouse.isButtonDown(0) || Mouse.isButtonDown(1)) {
-			int width = Utils.peekGuiScale().getScaledWidth();
-			int height = Utils.peekGuiScale().getScaledHeight();
+		{
+			final int scale = Utils.peekGuiScale().getScaleFactor();
+			final int height = Utils.peekGuiScale().getScaledHeight();
 
-			int mouseX = Mouse.getX() * width / Minecraft.getMinecraft().displayWidth;
-			int mouseY = height - Mouse.getY() * height / Minecraft.getMinecraft().displayHeight - 1;
+			final int mouseX = Mouse.getX() / scale;
+			final int mouseY = height - Mouse.getY() / scale - 1;
 
 			if (mouseY >= top && mouseY <= top + ySize) {
 				int leftPrev = leftSide - 1;
 				if (mouseX > leftPrev && mouseX < leftPrev + buttonXSize) { //"Previous" button
-					leftPressed = 1;
+					leftHovered = true;
 				}
-				int leftNext = rightSide + 1 - buttonXSize;
-				if (mouseX > leftNext && mouseX < leftNext + buttonXSize) { //"Next" button
-					rightPressed = 1;
+				int leftNext = rightSide + 1;
+				if (mouseX > leftNext - buttonXSize && mouseX < leftNext) { //"Next" button
+					rightHovered = true;
 				}
 			}
 		}
 
-		drawRect(leftSide - 1, top, leftSide - 1 + buttonXSize, top + ySize, fg.getRGB());
+		// Draw Buttons
 		GlStateManager.color(1f, 1f, 1f, 1f);
-		Minecraft.getMinecraft().getTextureManager().bindTexture(GuiTextures.rightarrow);
-		Utils.drawTexturedRect(leftSide - 1 + leftPressed,
-			top + leftPressed,
-			buttonXSize, ySize, 1, 0, 0, 1
-		);
-		Minecraft.getMinecraft().getTextureManager().bindTexture(GuiTextures.rightarrow_overlay);
-		Utils.drawTexturedRect(leftSide - 1,
-			top,
-			buttonXSize, ySize, 1 - leftPressed, leftPressed, 1 - leftPressed, leftPressed
-		);
-		GlStateManager.bindTexture(0);
-		Utils.drawStringCenteredScaled(EnumChatFormatting.BOLD + "Prev",
-			leftSide - 1 + buttonXSize * 300 / 480f + leftPressed,
-			top + ySize / 2f + leftPressed, false,
-			(int) (buttonXSize * 240 / 480f), Color.BLACK.getRGB()
-		);
+		Minecraft.getMinecraft().getTextureManager().bindTexture(GuiTextures.nav_buttons);
+		int v = leftHovered ? 20 : 0;
+		Gui.drawScaledCustomSizeModalRect(leftSide - 1, top, 0, v, 60, 20, buttonXSize, ySize, 60, 60);
+		v = rightHovered ? 20 : 0;
+		Gui.drawScaledCustomSizeModalRect(rightSide + 1 - buttonXSize, top, 0, v, 60, 20, buttonXSize, ySize, 60, 60);
 
-		drawRect(rightSide + 1 - buttonXSize, top, rightSide + 1, top + ySize, fg.getRGB());
-		GlStateManager.color(1f, 1f, 1f, 1f);
-		Minecraft.getMinecraft().getTextureManager().bindTexture(GuiTextures.rightarrow);
-		Utils.drawTexturedRect(rightSide + 1 - buttonXSize + rightPressed,
-			top + rightPressed,
-			buttonXSize, ySize
-		);
-		Minecraft.getMinecraft().getTextureManager().bindTexture(GuiTextures.rightarrow_overlay);
-		Utils.drawTexturedRect(rightSide + 1 - buttonXSize,
-			top,
-			buttonXSize, ySize, 1 - rightPressed, rightPressed, 1 - rightPressed, rightPressed
-		);
+		// Draw Arrows
+		Gui.drawScaledCustomSizeModalRect(leftSide - 1, top, 0, 40, 30, 20, buttonXSize / 2, ySize, 60, 60);
+		Gui.drawScaledCustomSizeModalRect(rightSide + 1 - buttonXSize / 2, top, 30, 40, 30, 20, buttonXSize / 2, ySize, 60, 60);
+
 		GlStateManager.bindTexture(0);
-		Utils.drawStringCenteredScaled(EnumChatFormatting.BOLD + "Next",
-			rightSide + 1 - buttonXSize * 300 / 480f + rightPressed,
-			top + ySize / 2f + rightPressed, false,
-			(int) (buttonXSize * 240 / 480f), Color.BLACK.getRGB()
+		Utils.drawStringCenteredScaled("Prev",
+			leftSide - 1 + buttonXSize / 1.6f,
+			top + ySize / 2f, true,
+			buttonXSize / 2, Color.WHITE.getRGB()
+		);
+		Utils.drawStringCenteredScaled("Next",
+			rightSide + 1 - buttonXSize / 1.6f,
+			top + ySize / 2f, true,
+			buttonXSize / 2, Color.WHITE.getRGB()
 		);
 
 		int strMaxLen = rightSide - leftSide - 2 * buttonXSize - 10;
 
-		drawRect(leftSide - 1 + buttonXSize + 3, top, rightSide + 1 - buttonXSize - 3, top + ySize,
-			new Color(177, 177, 177).getRGB()
-		);
-		drawRect(leftSide + buttonXSize + 3, top + 1, rightSide + 1 - buttonXSize - 3, top + ySize,
-			new Color(50, 50, 50).getRGB()
-		);
-		drawRect(leftSide + buttonXSize + 3, top + 1, rightSide - buttonXSize - 3, top + ySize - 1, fg.getRGB());
+		Minecraft.getMinecraft().getTextureManager().bindTexture(GuiTextures.mc_button);
+		int width = rightSide - leftSide - 2 * buttonXSize - 4;
+		int uWidth =  10 * width / ySize;
+		Gui.drawScaledCustomSizeModalRect(leftSide + buttonXSize + 2, top, 0, 66, uWidth, 20, -Math.floorDiv(-width, 2), ySize, 256, 256);
+		Gui.drawScaledCustomSizeModalRect(rightSide - buttonXSize - 2 - width/2, top, 200 - uWidth, 66, uWidth, 20, width/2, ySize, 256, 256);
+		GlStateManager.bindTexture(0);
+
 		Utils.drawStringCenteredScaledMaxWidth(pageText, (leftSide + rightSide) / 2,
-			top + ySize / 2f, false, strMaxLen, Color.BLACK.getRGB()
+			top + ySize / 2f, false, strMaxLen, Color.WHITE.getRGB()
 		);
 	}
 
